@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <PackageId>fcflib</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>shykeiichi</Authors>
+    <Company>shykeiichi</Company>
+
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+</Project>
