@@ -10,7 +10,7 @@
     <Authors>shykeiichi</Authors>
     <Company>shykeiichi</Company>
 
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
 </Project>

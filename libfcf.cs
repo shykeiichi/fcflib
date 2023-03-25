@@ -9,93 +9,209 @@ namespace libfcf
 
     public class Token
     {
+        public string value = "";
 
+        public int lineStart;
+        public int lineEnd;
+        public int charStart;
+        public int charEnd;  
     }
 
     internal class TokenIdentifier : Token
     {
-        public string value;
+        public new string value;
 
-        public TokenIdentifier(string value)
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenIdentifier(string value, int lineStart, int lineEnd, int charStart, int charEnd)
         {
             this.value = value;
+
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
         }
     }
 
     internal class TokenString : Token
     {
-        public string value;
+        public new string value;
 
-        public TokenString(string value)
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenString(string value, int lineStart, int lineEnd, int charStart, int charEnd)
         {
             this.value = value;
+            
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
         }
     }
 
     internal class TokenNumber : Token
     {
-        public float value;
+        public new string value;
 
-        public TokenNumber(float value)
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenNumber(string value, int lineStart, int lineEnd, int charStart, int charEnd)
         {
             this.value = value;
+            
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
         }
     }
 
     internal class TokenBoolean : Token
     {
-        public bool value;
-        public TokenBoolean(bool value)
+        public new string value;
+
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenBoolean(string value, int lineStart, int lineEnd, int charStart, int charEnd)
         {
             this.value = value;
+            
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
         }
     }
 
     internal class TokenAssign : Token
     {
-        string value = "=";
+        public new string value = "=";
+
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenAssign(int lineStart, int lineEnd, int charStart, int charEnd)
+        {
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
+        }
     }
 
     internal class TokenComma : Token
     {
-        string value = ",";
+        public new string value = ",";
+
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenComma(int lineStart, int lineEnd, int charStart, int charEnd)
+        {
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
+        }
     }
 
     internal class TokenArrayStart : Token
     {
-        string value = "[";
+        public new string value = "[";
+
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenArrayStart(int lineStart, int lineEnd, int charStart, int charEnd)
+        {
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
+        }
     }
 
     internal class TokenArrayEnd : Token
     {
-        string value = "]";
+        public new string value = "]";
+
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenArrayEnd(int lineStart, int lineEnd, int charStart, int charEnd)
+        {
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
+        }
     }
 
     internal class TokenDictStart : Token
     {
-        string value = "{";
+        public new string value = "{";
+
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
+
+        public TokenDictStart(int lineStart, int lineEnd, int charStart, int charEnd)
+        {
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
+        }
     }
 
     internal class TokenDictEnd : Token
     {
-        string value = "}";
-    }
+        public new string value = "}";
 
-    internal class TokenEnumStart : Token
-    {
+        public new int lineStart;
+        public new int lineEnd;
+        public new int charStart;
+        public new int charEnd;
 
-    }
-
-    internal class TokenEnumEnd : Token
-    {
-
+        public TokenDictEnd(int lineStart, int lineEnd, int charStart, int charEnd)
+        {
+            this.lineStart = lineStart;
+            this.lineEnd = lineEnd;
+            this.charStart = charStart;
+            this.charEnd = charEnd;
+        }
     }
 
     public class InvalidTokenTypeException : Exception
     {
-        public InvalidTokenTypeException(string message) : base(message)
-        {
+        public dynamic token;
 
+        public InvalidTokenTypeException(string message, dynamic token) : base(message)
+        {
+            this.token = token;
         }
     }
 
@@ -114,41 +230,58 @@ namespace libfcf
             }
         }
 
-        internal static Token[] TokenizeFromFile(string path)
-        {
-            string[] fileContentsArray = File.ReadAllLines(path);
-            string fileContents = "";
-            foreach (string line in fileContentsArray)
+        public static string[] SterilizeStringArray(string[] fileContents) {
+            List<string> fileContentsArr = new List<string>();
+            foreach (string line in fileContents)
             {
                 string line2 = line.Split("//").First();
                 line2 = line2 + "\n";
 
-                fileContents += line2.TrimStart().TrimEnd();
+                fileContentsArr.Add(line2.TrimStart().TrimEnd());
             }
 
-            string newFileContents = "";
+            List<string> newFileContentsArr = new List<string>();
             bool isString = false;
-            foreach (char c in fileContents)
-            {
-                if (c == '"')
+            foreach(string line in fileContentsArr) {
+                string newLine = "";
+                foreach (char c in line)
                 {
-                    isString = !isString;
-                }
+                    if (c == '"')
+                    {
+                        isString = !isString;
+                    }
 
-                if (!isString && c == ' ')
-                {
-                    continue;
-                }
+                    if (!isString && c == ' ')
+                    {
+                        continue;
+                    }
 
-                newFileContents += c;
+                    newLine += c;
+                }
+                // if(isString) {
+                //     newLine += "\n";
+                // }
+                newFileContentsArr.Add(newLine);
             }
+            return newFileContentsArr.ToArray();
 
-            return TokenizeFromMemory(newFileContents);
         }
 
-        internal static Token[] TokenizeFromMemory(string fileContents)
+        internal static Token[] TokenizeFromFile(string path)
         {
-            fileContents = "{" + fileContents + "}";
+            string[] fileContentsArray = File.ReadAllLines(path);
+
+            return TokenizeFromMemory(SterilizeStringArray(fileContentsArray));
+        }
+
+        internal static Token[] TokenizeFromMemory(string[] fileContents)
+        {
+            // fileContents = "{" + fileContents + "}";
+
+            fileContents[0] = fileContents[0].Insert(0, "{");
+            fileContents[fileContents.Length - 1] = fileContents[fileContents.Length - 1].Insert(fileContents[fileContents.Length - 1].Length, "}");
+
+            // Console.WriteLine(fileContents[0]);
 
             List<Token> stack = new List<Token>();
 
@@ -157,146 +290,91 @@ namespace libfcf
 
             var boolvalues = new String[2] { "true", "false" };
 
-            foreach (char c in fileContents)
-            {
-                switch (c)
+            int lineIndex = -1;
+            int charIndex = -1;
+
+            void HandleCurrentWord() {
+                if (currentWord != "")
                 {
-                    case '=':
+                    float value = 0f;
+                    if (float.TryParse(currentWord, out value))
+                    {
+                        stack.Add(new TokenNumber(value.ToString(), lineIndex, lineIndex, charIndex - currentWord.Length, charIndex));
+                        currentWord = "";
+                    }
+                    else
+                    {
                         if (boolvalues.Contains(currentWord))
                         {
-                            stack.Add(new TokenBoolean(currentWord == "true"));
+                            stack.Add(new TokenBoolean(currentWord.ToLower(), lineIndex, lineIndex, charIndex - currentWord.Length, charIndex));
                         }
                         else
                         {
-                            stack.Add(new TokenIdentifier(currentWord));
+                            stack.Add(new TokenIdentifier(currentWord, lineIndex, lineIndex, charIndex - currentWord.Length, charIndex));
                         }
 
                         currentWord = "";
-                        stack.Add(new TokenAssign());
-                        break;
-                    case ',':
-                        if (currentWord != "")
-                        {
-                            float value = 0f;
-                            if (float.TryParse(currentWord, out value))
-                            {
-                                stack.Add(new TokenNumber(value));
-                                currentWord = "";
-                            }
-                            else
-                            {
-                                if (boolvalues.Contains(currentWord))
-                                {
-                                    stack.Add(new TokenBoolean(currentWord == "true"));
-                                }
-                                else
-                                {
-                                    stack.Add(new TokenIdentifier(currentWord));
-                                }
+                    }
+                }
+            }
 
-                                currentWord = "";
-                            }
-                        }
+            foreach(string line in fileContents) {
+                lineIndex ++;
+                charIndex = -1;
+                foreach (char c in line)
+                {
+                    charIndex++;
+                    switch (c)
+                    {
+                        case '=':
+                            HandleCurrentWord();
 
-                        stack.Add(new TokenComma());
-                        break;
-                    case '[':
-                        stack.Add(new TokenArrayStart());
-                        break;
-                    case ']':
-                        if (currentWord != "")
-                        {
-                            float value = 0f;
-                            if (float.TryParse(currentWord, out value))
-                            {
-                                stack.Add(new TokenNumber(value));
-                                currentWord = "";
-                            }
-                            else
-                            {
-                                if (boolvalues.Contains(currentWord))
-                                {
-                                    stack.Add(new TokenBoolean(currentWord == "true"));
-                                }
-                                else
-                                {
-                                    stack.Add(new TokenIdentifier(currentWord));
-                                }
+                            stack.Add(new TokenAssign(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            break;
+                        case ',':
+                            HandleCurrentWord();
 
-                                currentWord = "";
-                            }
-                        }
+                            stack.Add(new TokenComma(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            break;
+                        case '[':
+                            HandleCurrentWord();
 
-                        stack.Add(new TokenArrayEnd());
-                        break;
-                    case '{':
-                        stack.Add(new TokenDictStart());
-                        break;
-                    case '}':
-                        if (currentWord != "")
-                        {
-                            float value = 0f;
-                            if (float.TryParse(currentWord, out value))
+                            stack.Add(new TokenArrayStart(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            break;
+                        case ']':
+                            HandleCurrentWord();
+
+                            stack.Add(new TokenArrayEnd(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            break;
+                        case '{':
+                            HandleCurrentWord();
+
+                            stack.Add(new TokenDictStart(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            break;
+                        case '}':
+                            HandleCurrentWord();
+
+                            stack.Add(new TokenDictEnd(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            break;
+                        default:
+                            if (c != '"')
                             {
-                                stack.Add(new TokenNumber(value));
-                                currentWord = "";
+                                currentWord += c;
                             }
-                            else
+
+                            if (c == '"')
                             {
-                                if (boolvalues.Contains(currentWord))
+                                if (isString)
                                 {
-                                    stack.Add(new TokenBoolean(currentWord == "true"));
-                                }
-                                else
-                                {
-                                    stack.Add(new TokenIdentifier(currentWord));
+                                    stack.Add(new TokenString(currentWord, lineIndex, lineIndex, charIndex - currentWord.Length - 1, charIndex + 1));
+                                    currentWord = "";
                                 }
 
-                                currentWord = "";
-                            }
-                        }
-
-                        stack.Add(new TokenDictEnd());
-                        break;
-                    case '(':
-                        stack.Add(new TokenEnumStart());
-                        break;
-                    case ')':
-                        if (currentWord != "")
-                        {
-                            if (boolvalues.Contains(currentWord))
-                            {
-                                stack.Add(new TokenBoolean(currentWord == "true"));
-                            }
-                            else
-                            {
-                                stack.Add(new TokenIdentifier(currentWord));
+                                isString = !isString;
                             }
 
-                            currentWord = "";
-                        }
-
-                        stack.Add(new TokenEnumEnd());
-                        break;
-
-                    default:
-                        if (c != '"')
-                        {
-                            currentWord += c;
-                        }
-
-                        if (c == '"')
-                        {
-                            if (isString)
-                            {
-                                stack.Add(new TokenString(currentWord));
-                                currentWord = "";
-                            }
-
-                            isString = !isString;
-                        }
-
-                        break;
+                            break;
+                    }
                 }
             }
 
@@ -321,12 +399,12 @@ namespace libfcf
                 }
                 else
                 {
-                    throw new InvalidTokenTypeException("Expected identifier type for key got: " + GetTokenAsHuman(json_key));
+                    throw new InvalidTokenTypeException("Expected identifier type for key got: " + GetTokenAsHuman(json_key), json_key);
                 }
 
                 if (tokens[0].GetType() != typeof(TokenAssign))
                 {
-                    throw new InvalidTokenTypeException($"Expected {GetTokenAsHuman(new TokenAssign())} got {GetTokenAsHuman(tokens[0])}");
+                    throw new InvalidTokenTypeException($"Expected '=' got {GetTokenAsHuman(tokens[0])}", tokens[0]);
                 }
 
                 var tmp = Parse(tokens.ToList().Skip(1).ToArray());
@@ -336,8 +414,7 @@ namespace libfcf
                 if (!(json_value.GetType() == typeof(TokenString) || json_value.GetType() == typeof(TokenNumber) || json_value.GetType() == typeof(TokenBoolean) ||
                      json_value.GetType() == typeof(List<dynamic>) || json_value.GetType() == typeof(Dictionary<string, dynamic>)))
                 {
-                    Console.WriteLine(json_value);
-                    throw new InvalidTokenTypeException($"Expected TokenString | TokenNumber | TokenBool got {GetTokenAsHuman(json_value)}");
+                    throw new InvalidTokenTypeException($"expected string, number or bool got {GetTokenAsHuman(json_value)}", json_value);
                 }
 
                 // json_object.Add((string)(((TokenIdentifier)json_key).value), json_value);
@@ -358,7 +435,7 @@ namespace libfcf
                 }
                 else if (t.GetType() != typeof(TokenComma))
                 {
-                    throw new InvalidTokenTypeException($"Expected {GetTokenAsHuman(new TokenAssign())} after pair in object got {GetTokenAsHuman(t)}");
+                    throw new InvalidTokenTypeException($"Expected '=' after pair in object got {GetTokenAsHuman(t)}", t);
                 }
 
                 tokens = tokens.ToList().Skip(1).ToArray();
@@ -397,7 +474,7 @@ namespace libfcf
                 }
                 else if (t.GetType() != typeof(TokenComma))
                 {
-                    throw new InvalidTokenTypeException($"Expected comma after object in array got {GetTokenAsHuman(t)}");
+                    throw new InvalidTokenTypeException($"Expected comma after object in array got {GetTokenAsHuman(t)}", t);
                 }
                 else
                 {
@@ -583,12 +660,17 @@ namespace libfcf
         public static dynamic DeserializeObjectFromFile(string filePath)
         {
             var stack = TokenizeFromFile(filePath);
+
+            // foreach(var d in stack) {
+            //     Console.WriteLine(d + ": \"" + ((dynamic)d).value + "\"");
+            // }
+
             return DeserializeObject(stack);
         }
 
         public static dynamic DeserializeObjectFromMemory(string memory)
         {
-            var stack = TokenizeFromMemory(memory);
+            var stack = TokenizeFromMemory(new string[] {memory});
             return DeserializeObject(stack);
         }
     }
