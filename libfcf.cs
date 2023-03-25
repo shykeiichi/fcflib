@@ -59,14 +59,14 @@ namespace libfcf
 
     internal class TokenNumber : Token
     {
-        public new string value;
+        public new float value;
 
         public new int lineStart;
         public new int lineEnd;
         public new int charStart;
         public new int charEnd;
 
-        public TokenNumber(string value, int lineStart, int lineEnd, int charStart, int charEnd)
+        public TokenNumber(float value, int lineStart, int lineEnd, int charStart, int charEnd)
         {
             this.value = value;
             
@@ -79,14 +79,14 @@ namespace libfcf
 
     internal class TokenBoolean : Token
     {
-        public new string value;
+        public new bool value;
 
         public new int lineStart;
         public new int lineEnd;
         public new int charStart;
         public new int charEnd;
 
-        public TokenBoolean(string value, int lineStart, int lineEnd, int charStart, int charEnd)
+        public TokenBoolean(bool value, int lineStart, int lineEnd, int charStart, int charEnd)
         {
             this.value = value;
             
@@ -299,14 +299,14 @@ namespace libfcf
                     float value = 0f;
                     if (float.TryParse(currentWord, out value))
                     {
-                        stack.Add(new TokenNumber(value.ToString(), lineIndex, lineIndex, charIndex - currentWord.Length, charIndex));
+                        stack.Add(new TokenNumber(value, lineIndex, lineIndex, charIndex - currentWord.Length, charIndex));
                         currentWord = "";
                     }
                     else
                     {
                         if (boolvalues.Contains(currentWord))
                         {
-                            stack.Add(new TokenBoolean(currentWord.ToLower(), lineIndex, lineIndex, charIndex - currentWord.Length, charIndex));
+                            stack.Add(new TokenBoolean(currentWord == "true", lineIndex, lineIndex, charIndex - currentWord.Length, charIndex));
                         }
                         else
                         {
