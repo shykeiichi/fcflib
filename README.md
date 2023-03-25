@@ -64,5 +64,5 @@ persons = [
 
 Differences:
 - Implied top level object eg. no need to surround top level object in curly braces "{}"
-- Names are identifiers not strings to have a clear distinction
+- Names are identifiers not strings to have a clear distinction. 'false', 'true' and all float parsable numbers are invalid identifiers.
 - Usage of equals "=" instead of colon ":" to more clearly designate an assign operation
