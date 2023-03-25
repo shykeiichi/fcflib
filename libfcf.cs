@@ -329,32 +329,32 @@ namespace libfcf
                         case '=':
                             HandleCurrentWord();
 
-                            stack.Add(new TokenAssign(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            stack.Add(new TokenAssign(lineIndex, lineIndex, charIndex, charIndex + 1));
                             break;
                         case ',':
                             HandleCurrentWord();
 
-                            stack.Add(new TokenComma(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            stack.Add(new TokenComma(lineIndex, lineIndex, charIndex, charIndex + 1));
                             break;
                         case '[':
                             HandleCurrentWord();
 
-                            stack.Add(new TokenArrayStart(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            stack.Add(new TokenArrayStart(lineIndex, lineIndex, charIndex, charIndex + 1));
                             break;
                         case ']':
                             HandleCurrentWord();
 
-                            stack.Add(new TokenArrayEnd(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            stack.Add(new TokenArrayEnd(lineIndex, lineIndex, charIndex, charIndex + 1));
                             break;
                         case '{':
                             HandleCurrentWord();
 
-                            stack.Add(new TokenDictStart(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            stack.Add(new TokenDictStart(lineIndex, lineIndex, charIndex, charIndex + 1));
                             break;
                         case '}':
                             HandleCurrentWord();
 
-                            stack.Add(new TokenDictEnd(lineIndex, lineIndex, charIndex - 1, charIndex));
+                            stack.Add(new TokenDictEnd(lineIndex, lineIndex, charIndex, charIndex + 1));
                             break;
                         default:
                             if (c != '"')
