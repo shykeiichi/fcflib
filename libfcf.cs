@@ -216,7 +216,7 @@ namespace libfcf
     }
 
 
-    public static class FCF
+    public static class LibFCF
     {
         internal static string GetTokenAsHuman(Token t)
         {
