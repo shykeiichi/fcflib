@@ -7,7 +7,7 @@
 ```c#
 using libfcf;
 
-Dictionary<string, dynamic> deserializedObject = FCF.DeserializeObjectFromFile($filePath);
+Dictionary<string, dynamic> deserializedObject = FCF.DeserializeObjectFromFile("./config.fc");
 ```
 
 ### Deserialize from memory
