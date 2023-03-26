@@ -7,7 +7,7 @@
 ```c#
 using libfcf;
 
-Dictionary<string, dynamic> deserializedObject = LibFCF.DeserializeObjectFromFile("./config.fc");
+Dictionary<string, dynamic> deserializedObject = Parser.DeserializeObjectFromFile("./config.fc");
 ```
 
 ### Deserialize from memory
@@ -25,7 +25,7 @@ buildOptions = [
 ]
 """;
 
-Dictionary<string, dynamic> deserializedObject = LibFCF.DeserializeObjectFromMemory(memory);
+Dictionary<string, dynamic> deserializedObject = Parser.DeserializeObjectFromMemory(memory);
 ```
 
 ## JSON Comparison
