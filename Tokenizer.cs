@@ -109,4 +109,16 @@ public static class Tokenizer {
 
         return tokens.ToArray();
     }
+
+    internal static string GetTokenAsHuman(Token t)
+    {
+        if (t.GetType() == typeof(TokenString))
+        {
+            return $"[{t}: \"{((dynamic)t).value}\"]";
+        }
+        else
+        {
+            return $"[{t}: '{((dynamic)t).value}']";
+        }
+    }
 }
