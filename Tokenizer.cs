@@ -6,8 +6,10 @@ public static class Tokenizer {
     }   
 
     public static Token[] TokenizeFromMemory(string[] fileLines) {
-        fileLines[0] = fileLines[0].Insert(0, "{");
-        fileLines[fileLines.Length - 1] = fileLines[fileLines.Length - 1].Insert(fileLines[fileLines.Length - 1].Length, "}");
+        if(fileLines[0][0] != '[') {
+            fileLines[0] = fileLines[0].Insert(0, "{");
+            fileLines[fileLines.Length - 1] = fileLines[fileLines.Length - 1].Insert(fileLines[fileLines.Length - 1].Length, "}");
+        }
 
         for(var i = 0; i < fileLines.Length; i++) {
             fileLines[i] = fileLines[i].Split("//")[0];
@@ -64,7 +66,7 @@ public static class Tokenizer {
                     case '=': {
                         HandleCurrentWord();
 
-                        tokens.Add(new TokenAssign(lineIdx, lineIdx, charIdx, charIdx + 1));
+                        tokens.Add(new TokenAssign(lineIdx, lineIdx, charIdx - 1, charIdx));
                     } break;
                     case '"': {
                         isString = true;
@@ -72,29 +74,29 @@ public static class Tokenizer {
                     case ',': {
                         HandleCurrentWord();
 
-                        tokens.Add(new TokenComma(lineIdx, lineIdx, charIdx, charIdx + 1));
+                        tokens.Add(new TokenComma(lineIdx, lineIdx, charIdx - 1, charIdx));
                     } break;
 
                     case '[': {
                         HandleCurrentWord();
 
-                        tokens.Add(new TokenArrayStart(lineIdx, lineIdx, charIdx, charIdx + 1));
+                        tokens.Add(new TokenArrayStart(lineIdx, lineIdx, charIdx - 1, charIdx));
                     } break;
                     case ']': {
                         HandleCurrentWord();
 
-                        tokens.Add(new TokenArrayEnd(lineIdx, lineIdx, charIdx, charIdx + 1));
+                        tokens.Add(new TokenArrayEnd(lineIdx, lineIdx, charIdx - 1, charIdx));
                     } break;
 
                     case '{': {
                         HandleCurrentWord();
 
-                        tokens.Add(new TokenDictStart(lineIdx, lineIdx, charIdx, charIdx + 1));
+                        tokens.Add(new TokenDictStart(lineIdx, lineIdx, charIdx - 1, charIdx));
                     } break;
                     case '}': {
                         HandleCurrentWord();
 
-                        tokens.Add(new TokenDictEnd(lineIdx, lineIdx, charIdx, charIdx + 1));
+                        tokens.Add(new TokenDictEnd(lineIdx, lineIdx, charIdx - 1, charIdx));
                     } break;
                     default: {
                         if(c != ' ') {

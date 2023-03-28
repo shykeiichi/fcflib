@@ -133,173 +133,33 @@ public static class Parser
         }
     }
 
-    public static string SerializeObjectToJson(dynamic obj)
+    public static Dictionary<string, object>  DeserializeObject(Token[] tokens)
     {
-        string output = "";
-
-        int i = -1;
-        if (obj.GetType() == typeof(Dictionary<string, dynamic>))
-        {
-            output += "{";
-            foreach (KeyValuePair<string, dynamic> kvp in obj)
-            {
-                i++;
-                if (kvp.Value.GetType() == typeof(List<dynamic>) || kvp.Value.GetType() == typeof(Dictionary<string, dynamic>))
-                {
-                    output += $"\"{kvp.Key}\": {SerializeObjectToJson(kvp.Value)}";
-                }
-                else
-                {
-                    if (kvp.Value.GetType() == typeof(string))
-                    {
-                        output += $"\"{kvp.Key}\": \"{kvp.Value}\"";
-                    }
-                    else if (kvp.Value.GetType() == typeof(bool))
-                    {
-                        var boolval = kvp.Value ? "true" : "false";
-                        output += $"\"{kvp.Key}\": {boolval}";
-                    }
-                    else
-                    {
-                        output += $"\"{kvp.Key}\": {kvp.Value}";
-                    }
-                }
-                if (i != obj.Count - 1)
-                {
-                    output += ", ";
-                }
-            }
-            output += "}";
-        }
-        else if (obj.GetType() == typeof(List<dynamic>))
-        {
-            output += "[";
-            foreach (dynamic val in obj)
-            {
-                i++;
-                if (val.GetType() == typeof(List<dynamic>) || val.GetType() == typeof(Dictionary<string, dynamic>))
-                {
-                    output += $"{SerializeObjectToJson(val)}";
-                }
-                else
-                {
-                    if (val.GetType() == typeof(string))
-                    {
-                        output += $"\"{val}\"";
-                    }
-                    else if (val.GetType() == typeof(bool))
-                    {
-                        output += val ? "true" : "false";
-                    }
-                    else
-                    {
-                        output += val;
-                    }
-                }
-                if (i != obj.Count - 1)
-                {
-                    output += ", ";
-                }
-            }
-            output += "]";
-        }
-
-        return output;
+        return (Dictionary<string, object>)Parse(tokens)[0];
     }
 
-    public static string SerializeObject(dynamic obj)
-    {
-        string output = "";
-
-        int i = -1;
-        if (obj.GetType() == typeof(Dictionary<string, dynamic>))
-        {
-            output += "{";
-            foreach (KeyValuePair<string, dynamic> kvp in obj)
-            {
-                i++;
-                if (kvp.Value.GetType() == typeof(List<dynamic>) || kvp.Value.GetType() == typeof(Dictionary<string, dynamic>))
-                {
-                    output += $"{kvp.Key} = {SerializeObject(kvp.Value)}";
-                }
-                else
-                {
-                    if (kvp.Value.GetType() == typeof(string))
-                    {
-                        output += $"{kvp.Key} = \"{kvp.Value}\"";
-                    }
-                    else if (kvp.Value.GetType() == typeof(bool))
-                    {
-                        var boolval = kvp.Value ? "true" : "false";
-                        output += $"{kvp.Key} = {boolval}";
-                    }
-                    else
-                    {
-                        output += $"{kvp.Key} = {kvp.Value}";
-                    }
-                }
-                if (i != obj.Count - 1)
-                {
-                    output += ", ";
-                }
-            }
-            output += "}";
-        }
-        else if (obj.GetType() == typeof(List<dynamic>))
-        {
-            output += "[";
-            foreach (dynamic val in obj)
-            {
-                i++;
-                if (val.GetType() == typeof(List<dynamic>) || val.GetType() == typeof(Dictionary<string, dynamic>))
-                {
-                    output += $"{SerializeObject(val)}";
-                }
-                else
-                {
-                    if (val.GetType() == typeof(string))
-                    {
-                        output += $"\"{val}\"";
-                    }
-                    else if (val.GetType() == typeof(bool))
-                    {
-                        output += val ? "true" : "false";
-                    }
-                    else
-                    {
-                        output += val;
-                    }
-                }
-                if (i != obj.Count - 1)
-                {
-                    output += ", ";
-                }
-            }
-            output += "]";
-        }
-
-        return output;
-    }
-
-    public static dynamic DeserializeObject(Token[] tokens)
-    {
-        return Parse(tokens)[0];
-    }
-
-    public static dynamic DeserializeObjectFromFile(string filePath)
+    public static Dictionary<string, object> DeserializeObjectFromFile(string filePath)
     {
         var stack = TokenizeFromFile(filePath);
 
-        // foreach(var d in stack) {
-        //     Console.WriteLine(d + ": \"" + ((dynamic)d).value + "\"");
-        // }
-
         return DeserializeObject(stack);
     }
 
-    public static dynamic DeserializeObjectFromMemory(string memory)
+    public static List<object>  DeserializeArray(Token[] tokens)
     {
-        var stack = TokenizeFromMemory(new string[] {memory});
-        return DeserializeObject(stack);
+        return (List<object>)Parse(tokens)[0];
+    }
+
+    public static List<object> DeserializeArrayFromFile(string filePath)
+    {
+        var stack = TokenizeFromFile(filePath);
+
+        return DeserializeArray(stack);
+    }
+
+    public static List<object> DeserializeArrayFromMemory(string memory)
+    {
+        var stack = TokenizeFromMemory(memory.Split('\n'));
+        return DeserializeArray(stack);
     }
 }
