@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace libfcf;
 
 public static class Tokenizer {
@@ -32,7 +34,7 @@ public static class Tokenizer {
                 } else {
                     float value;
                     if(float.TryParse(currentWord, out value)) {
-                        tokens.Add(new TokenNumber(value, lineIdx, lineIdx, charIdx - value.ToString().Length, charIdx));
+                        tokens.Add(new TokenNumber(value, lineIdx, lineIdx, charIdx - value.ToString(CultureInfo.CurrentCulture).Length, charIdx));
                     } else {
                         if(boolValues.Contains(currentWord.ToLower())) {
                             tokens.Add(new TokenBoolean(currentWord.ToLower() == "true", lineIdx, lineIdx, charIdx - currentWord.Length, charIdx));
